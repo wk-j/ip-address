@@ -1,5 +1,8 @@
-var name = "MyIpAddress";
+#addin nuget:?package=ProjectParser&version=0.3.0
 
+using ProjectParser;
+
+var name = "MyIpAddress";
 var project = $"src/{name}/{name}.csproj";
 
 Task("Publish")
@@ -13,7 +16,8 @@ Task("Publish")
 Task("Zip")
     .IsDependentOn("Publish")
     .Does(() => {
-        Zip($"publish/MyIpAddress", "publish/my-ip-address.0.1.0.zip");
+        var info = Parser.Parse(project);
+        Zip($"publish/MyIpAddress", $"publish/my-ip-address.{info.Version}.zip");
     });
 
 
