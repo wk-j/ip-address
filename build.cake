@@ -1,39 +1,40 @@
-#addin nuget:?package=ProjectParser&version=0.3.0
+#addin "wk.StartProcess"
+#addin "wk.ProjectParser"
 
+using PS = StartProcess.Processor;
 using ProjectParser;
 
-var name = "MyIpAddress";
-var project = $"src/{name}/{name}.csproj";
+var npi = EnvironmentVariable("npi");
+var name = "IpAddress";
 
-Task("Publish")
-    .Does(() => {
-        CleanDirectory("publish");
-        DotNetCorePublish(project, new DotNetCorePublishSettings {
-            OutputDirectory = "publish/MyIpAddress"
-        });
-    });
+var currentDir = new DirectoryInfo(".").FullName;
+var info = Parser.Parse($"src/{name}/{name}.csproj");
 
-Task("Zip")
-    .IsDependentOn("Publish")
-    .Does(() => {
-        var info = Parser.Parse(project);
-        Zip($"publish/MyIpAddress", $"publish/my-ip-address.{info.Version}.zip");
-    });
-
-
-Task("Build").Does(() => {
-    MSBuild(project, settings => {
-        settings.WithTarget("Build");
+Task("Pack").Does(() => {
+    CleanDirectory("publish");
+    DotNetCorePack($"src/{name}", new DotNetCorePackSettings {
+        OutputDirectory = "publish"
     });
 });
 
-Task("Run")
-    .IsDependentOn("Build")
+Task("Publish-NuGet")
+    .IsDependentOn("Pack")
     .Does(() => {
-        MSBuild(project, settings => {
-            settings.WithTarget("Run");
+        var nupkg = new DirectoryInfo("publish").GetFiles("*.nupkg").LastOrDefault();
+        var package = nupkg.FullName;
+        NuGetPush(package, new NuGetPushSettings {
+            Source = "https://www.nuget.org/api/v2/package",
+            ApiKey = npi
         });
 });
 
-var target = Argument("target", "default");
+Task("Install")
+    .IsDependentOn("Pack")
+    .Does(() => {
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        PS.StartProcess($"dotnet tool uninstall -g {info.PackageId}");
+        PS.StartProcess($"dotnet tool install   -g {info.PackageId}  --add-source {currentDir}/publish --version {info.Version}");
+    });
+
+var target = Argument("target", "Pack");
 RunTarget(target);

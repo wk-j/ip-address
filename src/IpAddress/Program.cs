@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace MyIp {
+namespace IpAddress {
     class Program {
         static void Main(string[] args) {
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0)) {

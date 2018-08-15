@@ -4,15 +4,12 @@ Find IP Address
 
 ## Installation
 
-```
-brew tap wk-j/tab
-brew update
-
-brew install my-ip-address 
+```bash
+dotnet tool install -g wk.IpAddress
 ```
 
 ## Usage
 
-```
-my-ip-address
+```bash
+wk-ip-address
 ```
