@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <Version>0.1.0</Version>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <Version>0.1.1</Version>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <PackAsTool>true</PackAsTool>
         <PackageId>wk.IpAddress</PackageId>
         <ToolCommandName>wk-ip-address</ToolCommandName>
