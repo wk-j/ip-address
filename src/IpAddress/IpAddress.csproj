@@ -2,7 +2,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <Version>0.1.1</Version>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <PackAsTool>true</PackAsTool>
         <PackageId>wk.IpAddress</PackageId>
         <ToolCommandName>wk-ip-address</ToolCommandName>
